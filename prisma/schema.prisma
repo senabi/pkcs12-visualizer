@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,4 +14,39 @@ model Example {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Pkcs12 {
+  id           String        @id @default(cuid())
+  privateKeys  Pkey[]
+  certificates Certificate[]
+}
+
+model Certificate {
+  id        String @id @default(cuid())
+  pkcs12    Pkcs12 @relation(fields: [pkcs12Id], references: [id])
+  pkcs12Id  String
+  issuer    String
+  validFrom String
+  validTo   String
+  publicKey String
+  subject   String
+  raw       String @db.Text
+}
+
+model Pkey {
+  id                String @id @default(cuid())
+  pkcs12            Pkcs12 @relation(fields: [pkcs12Id], references: [id])
+  pkcs12Id          String
+  type              String
+  raw               String @db.Text
+  asymmetricKeyType String @db.Text
+  modulusLength     String
+  publicExponent    String
+  privateExponent   String @db.Text
+  firstPrimeFactor  String @db.Text
+  secondPrimeFactor String @db.Text
+  firstExponent     String @db.Text
+  secondExponent    String @db.Text
+  coefficient       String @db.Text
 }
