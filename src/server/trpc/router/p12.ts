@@ -3,9 +3,6 @@ import { p12Validator } from "../../../shared/pkcs12";
 import { router, publicProcedure } from "../trpc";
 import * as forge from "node-forge";
 import * as crypto from "crypto";
-import * as tls from "tls";
-
-import fs from "fs/promises";
 
 export const p12Router = router({
   hello: publicProcedure

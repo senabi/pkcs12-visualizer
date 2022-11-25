@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { P12FileValidator, p12Validator } from "../shared/pkcs12";
 import { zodResolver } from "@hookform/resolvers/zod";
