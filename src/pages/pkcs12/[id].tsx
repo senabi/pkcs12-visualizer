@@ -11,7 +11,7 @@ const PKCS12Data: React.FC<{
         <div className="py-2 text-2xl font-bold">Private Keys</div>
         <div className="flex flex-col gap-4">
           {props.data.privateKeys.map((key) => (
-            <div id={key.id} className="flex flex-col gap-3 border-t-2 py-2">
+            <div key={key.id} className="flex flex-col gap-3 border-t-2 py-2">
               <div className="rounded-lg bg-white/20 p-2">
                 <div className="pb-2 font-medium">Asymetric Key Type</div>
                 <div>{key.asymmetricKeyType}</div>
@@ -64,7 +64,7 @@ const PKCS12Data: React.FC<{
         <div className="py-2 text-2xl font-bold">Certificates</div>
         <div className="flex flex-col gap-4">
           {props.data.certificates.map((cert) => (
-            <div id={cert.id} className="flex flex-col gap-3 border-t-2 py-2">
+            <div key={cert.id} className="flex flex-col gap-3 border-t-2 py-2">
               <div className="rounded-lg bg-white/20 p-2">
                 <div className="pb-2 font-medium">Issuer</div>
                 <div>{cert.issuer}</div>
