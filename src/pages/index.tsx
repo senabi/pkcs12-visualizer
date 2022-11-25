@@ -5,6 +5,7 @@ import { P12FileValidator, p12Validator } from "../shared/pkcs12";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const Home: NextPage = () => {
   const methods = useForm<P12FileValidator>({
@@ -12,10 +13,15 @@ const Home: NextPage = () => {
   });
 
   const router = useRouter();
+  const [serverErrors, setServerErrors] = useState<string | null>(null);
 
   const p12mutation = trpc.p12.addP12.useMutation({
     onSuccess: (data) => {
+      setServerErrors(null);
       router.push(`/pkcs12/${data.id}`);
+    },
+    onError: (error) => {
+      setServerErrors(error.message);
     },
   });
   const onSubmit = async (data: P12FileValidator) => {
@@ -39,36 +45,45 @@ const Home: NextPage = () => {
           </h1>
           {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8"> */}
           <div
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white "
             // href="https://create.t3.gg/en/usage/first-steps"
           >
             <h3 className="text-2xl font-bold">Load .p12 file</h3>
             <FormProvider {...methods}>
-              <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <form
+                onSubmit={methods.handleSubmit(onSubmit)}
+                className="flex flex-col gap-2"
+              >
                 <div className="text-lg">
                   <input
                     type="file"
                     accept=".p12"
                     {...methods.register("contents")}
+                    className="
+                   hover:bg-purple-20 flex w-full cursor-text items-center justify-between rounded-lg border border-purple-200/20 bg-purple-200/10 px-4 py-2 text-sm font-medium text-slate-100 transition-colors duration-300 hover:border-purple-200/50 focus:border-0 
+                    "
                   />
                 </div>
                 <div className="text-lg text-black">
                   <input
                     {...methods.register("password")}
                     placeholder="password"
+                    className="
+                   hover:bg-purple-20 flex w-full cursor-text items-center justify-between rounded-lg border border-purple-200/20 bg-purple-200/10 px-4 py-2 text-sm font-medium text-slate-100 transition-colors duration-300 hover:border-purple-200/50 focus:border-0 
+                    "
                   />
                 </div>
                 <button
                   className={`${
-                    // rsaMutation.isLoading ? "pointer-events-none" : ""
-                    ""
+                    p12mutation.isLoading ? "pointer-events-none" : ""
+                    // ""
                   } flex items-center justify-center gap-2 rounded-lg bg-black px-4 py-2`}
                   type="submit"
                 >
                   <svg
                     className={`h-5 w-5 animate-spin ${
-                      // !rsaMutation.isLoading ? "hidden" : ""
-                      ""
+                      !p12mutation.isLoading ? "hidden" : ""
+                      // ""
                     }`}
                     fill="none"
                     viewBox="0 0 24 24"
@@ -92,8 +107,12 @@ const Home: NextPage = () => {
                 </button>
               </form>
             </FormProvider>
+            {serverErrors && (
+              <div className="rounded-lg bg-red-400 p-4">
+                Error: {serverErrors}
+              </div>
+            )}
           </div>
-          {/* </div> */}
         </div>
       </main>
     </>
